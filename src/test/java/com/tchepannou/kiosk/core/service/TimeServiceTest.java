@@ -22,32 +22,34 @@ public class TimeServiceTest {
     public void shouldGenerateDateYYMMDD(){
         // GIVEN
         final DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+        fmt.setTimeZone(TimeService.GMT);
 
         // WHEN
-        final Date date = service.toDate(2011, 01, 12);
+        final Date date = service.toDate(2011, 5, 12);
 
         // THEN
-        assertThat(fmt.format(date)).isEqualTo("2011-01-11 19:00:00 -0500");
+        assertThat(fmt.format(date)).isEqualTo("2011-05-12 00:00:00 +0000");
     }
 
     @Test
     public void shouldGenerateDateYYMMDDHHMM(){
         // GIVEN
         final DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+        fmt.setTimeZone(TimeService.GMT);
 
         // WHEN
-        final Date date = service.toDate(2011, 01, 12, 10, 30, 51);
+        final Date date = service.toDate(2011, 5, 12, 10, 30, 51);
 
         // THEN
-        assertThat(fmt.format(date)).isEqualTo("2011-01-12 05:30:51 -0500");
+        assertThat(fmt.format(date)).isEqualTo("2011-05-12 10:30:51 +0000");
     }
 
     @Test
     public void shouldFormatDate(){
         // WHEN
-        final Date date = service.toDate(2011, 01, 12, 10, 30, 51);
+        final Date date = service.toDate(2011, 8, 12, 10, 30, 51);
 
         // THEN
-        assertThat(service.format(date)).isEqualTo("2011-01-12 05:30:51 -0500");
+        assertThat(service.format(date)).isEqualTo("2011-08-12 10:30:51 +0000");
     }
 }

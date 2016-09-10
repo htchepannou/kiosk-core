@@ -158,7 +158,7 @@ public class SanitizeFilterTest {
             "ul\n" +
             "var").split("\\n");
 
-    private TextFilter filter = new SanitizeFilter();
+    private final TextFilter filter = new SanitizeFilter();
 
     @Test
     public void shouldFilterHtml() throws Exception {
@@ -171,13 +171,11 @@ public class SanitizeFilterTest {
         // Then
         final Document doc = Jsoup.parse(result);
         final List<String> wl = Arrays.asList(SanitizeFilter.TAG_WHITELIST);
-        for (final String tag : TAGS){
+        for (final String tag : TAGS) {
             if (!wl.contains(tag)) {
-                Elements elts = doc.select(tag);
+                final Elements elts = doc.select(tag);
                 assertThat(elts).isEmpty();
             }
         }
-
-        System.out.println(result);
     }
 }
