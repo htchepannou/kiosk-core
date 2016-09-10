@@ -1,12 +1,13 @@
 package com.tchepannou.kiosk.core.service;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
 public class TimeService {
-    private static final TimeZone GMT = TimeZone.getTimeZone("GMT");
+    public static final TimeZone GMT = TimeZone.getTimeZone("GMT");
     private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss Z";
 
     public Date now (){
@@ -29,7 +30,10 @@ public class TimeService {
     }
 
     public String format(Date date){
-        return date != null ? new SimpleDateFormat(DATETIME_FORMAT).format(date) : null;
+        final DateFormat fmt = new SimpleDateFormat(DATETIME_FORMAT);
+        fmt.setTimeZone(GMT);
+
+        return date != null ? fmt.format(date) : null;
     }
 
     private Calendar getCalendar(){
