@@ -1,6 +1,7 @@
 package com.tchepannou.kiosk.core.service;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -8,7 +9,7 @@ import java.util.TimeZone;
 
 public class TimeService {
     public static final TimeZone GMT = TimeZone.getTimeZone("GMT");
-    private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss Z";
+    public static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss Z";
 
     public Date now (){
         return getCalendar().getTime();
@@ -34,6 +35,13 @@ public class TimeService {
         fmt.setTimeZone(GMT);
 
         return date != null ? fmt.format(date) : null;
+    }
+
+    public Date parse(final String date) throws ParseException{
+        final DateFormat fmt = new SimpleDateFormat(DATETIME_FORMAT);
+        fmt.setTimeZone(GMT);
+
+        return date != null ? fmt.parse(date) : null;
     }
 
     private Calendar getCalendar(){
