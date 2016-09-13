@@ -15,7 +15,7 @@ public class TimeServiceTest {
     public void showReturnNow(){
         final Date now = service.now();
 
-        assertThat(System.currentTimeMillis() - now.getTime()).isBetween(0L, 10L);
+        assertThat(System.currentTimeMillis() - now.getTime()).isBetween(0L, 100L);
     }
 
     @Test
