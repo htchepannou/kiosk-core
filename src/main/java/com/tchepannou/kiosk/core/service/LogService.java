@@ -17,7 +17,8 @@ public class LogService {
 
     private final Map<String, Object> values = Collections.synchronizedMap(new HashMap<>());
 
-    private TimeService time = new TimeService();
+    private TimeService time;
+    private final Logger logger;
 
     public void add(final String key, final Object value) {
         if (value == null){
@@ -25,6 +26,15 @@ public class LogService {
         }
 
         values.put(key, value);
+    }
+
+    public LogService(TimeService time) {
+        this(LOGGER, time);
+    }
+
+    LogService(final Logger logger, final TimeService time) {
+        this.logger = logger;
+        this.time = time;
     }
 
     @Override
@@ -44,12 +54,12 @@ public class LogService {
     }
 
     public void log() {
-        LOGGER.info(toString());
+        logger.info(toString());
         values.clear();
     }
 
     public void log(final Throwable ex) {
-        LOGGER.info(toString(), ex);
+        logger.info(toString(), ex);
         values.clear();
     }
 
