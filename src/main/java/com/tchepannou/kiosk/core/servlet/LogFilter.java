@@ -39,7 +39,7 @@ public class LogFilter implements Filter{
 
     }
 
-    protected void doFilter(
+    private void doFilter(
             final HttpServletRequest request,
             final HttpServletResponse response,
             final FilterChain filterChain
