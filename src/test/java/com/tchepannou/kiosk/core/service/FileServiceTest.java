@@ -13,13 +13,13 @@ import java.nio.file.Files;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class LocalContentRepositoryServiceTest {
+public class FileServiceTest {
 
     @Test
     public void shouldPutFile() throws Exception {
         // Given
         final File home = Files.createTempDirectory("test").toFile();
-        final ContentRepositoryService repo = new LocalContentRepositoryService(home);
+        final FileService repo = new FileService(home);
 
         final InputStream in = new ByteArrayInputStream("hello world".getBytes());
 
@@ -36,7 +36,7 @@ public class LocalContentRepositoryServiceTest {
     public void shouldGetFromFile () throws Exception {
         // Given
         final File home = Files.createTempDirectory("test").toFile();
-        final ContentRepositoryService repo = new LocalContentRepositoryService(home);
+        final FileService repo = new FileService(home);
 
         try (OutputStream fout = new FileOutputStream(new File(home, "test.txt"))){
             final InputStream in = new ByteArrayInputStream("hello world".getBytes());
@@ -49,18 +49,6 @@ public class LocalContentRepositoryServiceTest {
 
         // Then
         assertThat(out.toString()).isEqualTo("hello world");
-
-    }
-
-    @Test(expected = ContentRepositoryException.class)
-    public void shouldThrowContentRepositoryExceptionnWhenReadInvalidFile () throws Exception {
-        // Given
-        final File home = Files.createTempDirectory("test").toFile();
-        final ContentRepositoryService repo = new LocalContentRepositoryService(home);
-
-        // When
-        final ByteArrayOutputStream out = new ByteArrayOutputStream();
-        repo.get("unknown.txt", out);
 
     }
 }

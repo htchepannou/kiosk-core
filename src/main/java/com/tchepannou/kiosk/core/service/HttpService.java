@@ -8,7 +8,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class HttpService {
+public class HttpService implements UrlService {
     private static final String VERSION = "1.0";
     private static final String USER_AGENT = String.format("Mozilla/5.0 (compatible; Kioskbot/%s)", VERSION);
 
@@ -46,5 +46,10 @@ public class HttpService {
         } finally {
             hc.disconnect();
         }
+    }
+
+    @Override
+    public void put(final String url, final InputStream content) throws IOException {
+        throw new IllegalStateException("Not supported exception");
     }
 }
