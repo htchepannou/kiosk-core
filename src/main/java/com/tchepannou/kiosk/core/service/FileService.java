@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class FileService implements UrlService {
+    private final String S3_PREFIX = "s3://";
     private final File home;
 
     public FileService(final File directory) {
@@ -17,7 +18,9 @@ public class FileService implements UrlService {
     }
 
     @Override
-    public void put(final String key, final InputStream content) throws IOException {
+    public void put(final String url, final InputStream content) throws IOException {
+        final String key = url.startsWith(S3_PREFIX) ? url.substring(S3_PREFIX.length()) : url;
+
         final File file = toFile(key);
         final File dir = file.getParentFile();
         if (!dir.exists()) {
@@ -30,7 +33,9 @@ public class FileService implements UrlService {
     }
 
     @Override
-    public void get(final String key, final OutputStream out) throws IOException {
+    public void get(final String url, final OutputStream out) throws IOException {
+        final String key = url.startsWith(S3_PREFIX) ? url.substring(S3_PREFIX.length()) : url;
+
         final File file = toFile(key);
         try (InputStream in = new FileInputStream(file)) {
             IOUtils.copy(in, out);
