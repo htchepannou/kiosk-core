@@ -15,7 +15,7 @@ import java.util.StringTokenizer;
 /**
  * Extract main content
  */
-public class ContentFilter implements TextFilter {
+public class ContentFilter implements Filter<String> {
     //-- Attributes
     private static final List<String> TAG_INLINE = Arrays.asList("br", "a", "span");
     private static final List<String> TAG_FORMATTING = Arrays.asList("i", "b", "font", "em", "small", "mark", "del", "ins", "sub", "sup", "strong");

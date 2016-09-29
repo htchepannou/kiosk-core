@@ -1,5 +1,8 @@
 package com.tchepannou.kiosk.core.rule;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 public class TextLengthRule implements TextRule {
     private final int minLength;
 
@@ -9,7 +12,8 @@ public class TextLengthRule implements TextRule {
 
     @Override
     public Validation validate(final String text) {
-        return text.length() > minLength
+        Document doc = Jsoup.parse(text);
+        return doc.body().text().length() > minLength
                 ? Validation.success()
                 : Validation.failure(getClass().getSimpleName());
     }

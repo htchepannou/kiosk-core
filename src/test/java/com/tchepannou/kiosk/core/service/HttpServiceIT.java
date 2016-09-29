@@ -43,6 +43,15 @@ public class HttpServiceIT {
         assertThat(out.toString()).isEqualTo("hello world");
     }
 
+    @Test
+    public void shouldConvertToUTF8() throws IOException{
+        final OutputStream out = new ByteArrayOutputStream();
+        service.get("http://www.camer.be/54887/1:11/cameroun-vairified-offre-des-taxis-de-qualite-a-douala-et-yaounde-cameroon.html", out);
+
+        final String html = out.toString();
+        System.out.println(html);
+
+    }
     private Handler createHandler() {
         return new DefaultHandler() {
             @Override
