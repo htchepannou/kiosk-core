@@ -20,6 +20,6 @@ public class JsoupHelper {
         }
     }
 
-    public static interface Predicate<T>{
-        public boolean test(T obj);
+    public interface Predicate<T>{
+        boolean test(T obj);
     }}

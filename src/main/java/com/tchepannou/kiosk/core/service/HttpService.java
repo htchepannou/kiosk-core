@@ -1,12 +1,17 @@
 package com.tchepannou.kiosk.core.service;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.http.Header;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class HttpService implements UrlService {
     private static final String VERSION = "1.0";
@@ -18,38 +23,54 @@ public class HttpService implements UrlService {
 
     private final int connectionTimeout;
 
-    public HttpService(){
+    public HttpService() {
         this(1500);
     }
-    public HttpService(int connectionTimeout){
+
+    public HttpService(final int connectionTimeout) {
         this.connectionTimeout = connectionTimeout;
     }
 
     public void get(final String url, final OutputStream out) throws IOException {
-        final URL u = new URL(url);
-        final HttpURLConnection hc = (HttpURLConnection) u.openConnection();
-        try {
-            hc.setDoOutput(true);
-            hc.setDoInput(true);
-            hc.setUseCaches(false);
-            hc.setInstanceFollowRedirects(true);
-            hc.setConnectTimeout(connectionTimeout * 1000);
-            hc.setReadTimeout(connectionTimeout * 1000);
-            hc.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
-            hc.setRequestProperty("Accept-Encoding", "gzip,deflate,sdch");
-            hc.setRequestProperty("Accept-Language", "en-US,en;q=0.8,es;q=0.6");
-            hc.setRequestProperty("Connection", "keep-alive");
-
-            try (final InputStream in = u.openStream()) {
-                IOUtils.copy(in, out);
-            }
-        } finally {
-            hc.disconnect();
+        final CloseableHttpClient client = HttpClients.createDefault();
+        final HttpGet method = new HttpGet(url);
+        method.setHeader("Connection", "keep-alive");
+        method.setHeader("User-Agent", USER_AGENT);
+        try (CloseableHttpResponse response = client.execute(method)) {
+            final InputStream in = getContentAsUTF8(response);
+            IOUtils.copy(in, out);
         }
     }
 
     @Override
     public void put(final String url, final InputStream content) throws IOException {
         throw new IllegalStateException("Not supported exception");
+    }
+
+    private InputStream getContentAsUTF8(final CloseableHttpResponse response) throws IOException {
+        final InputStream in = response.getEntity().getContent();
+        final String encoding = getEncoding(response);
+        if (encoding == null || "utf-8".equalsIgnoreCase(encoding)) {
+            return in;
+        }
+
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+        IOUtils.copy(in, out);
+        final String html = new String(out.toByteArray(), encoding);
+        final byte[] utf8 = html.getBytes("utf-8");
+        return new ByteArrayInputStream(utf8);
+    }
+
+    private String getEncoding(final CloseableHttpResponse response) {
+        final Header contentType = response.getFirstHeader("Content-Type");
+        if (contentType != null) {
+            final String value = contentType.getValue();
+            final String charset = "charset=";
+            final int i = value.indexOf(charset);
+            if (i > 0) {
+                return value.substring(i + charset.length());
+            }
+        }
+        return null;
     }
 }

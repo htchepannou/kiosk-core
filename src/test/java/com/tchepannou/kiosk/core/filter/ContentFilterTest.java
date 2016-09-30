@@ -7,7 +7,7 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ContentFilterTest {
-    private final TextFilter filter = new ContentFilter(100);
+    private final ContentFilter filter = new ContentFilter(100);
 
     @Test
     public void shouldFilter() throws Exception {
