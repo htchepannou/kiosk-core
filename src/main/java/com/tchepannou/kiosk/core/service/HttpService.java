@@ -32,19 +32,50 @@ public class HttpService implements UrlService {
     }
 
     public void get(final String url, final OutputStream out) throws IOException {
-        final CloseableHttpClient client = HttpClients.createDefault();
-        final HttpGet method = new HttpGet(url);
-        method.setHeader("Connection", "keep-alive");
-        method.setHeader("User-Agent", USER_AGENT);
-        try (CloseableHttpResponse response = client.execute(method)) {
-            final InputStream in = getContentAsUTF8(response);
-            IOUtils.copy(in, out);
+        try (final CloseableHttpClient client = HttpClients.createDefault()) {
+            final HttpGet method = createHttpGet(url);
+            try (CloseableHttpResponse response = client.execute(method)) {
+                final InputStream in = getContentAsUTF8(response);
+                IOUtils.copy(in, out);
+            }
         }
+    }
+
+    public String get(final String url, final String keyPrefix, final FileService fileService) throws IOException {
+        try (final CloseableHttpClient client = HttpClients.createDefault()) {
+            final HttpGet method = createHttpGet(url);
+            try (CloseableHttpResponse response = client.execute(method)) {
+                final InputStream in = getContentAsUTF8(response);
+                final String key = keyPrefix + extension(response);
+                fileService.put(key, in);
+                return key;
+            }
+        }
+    }
+
+    private String extension(final CloseableHttpResponse response){
+        final Header header = response.getFirstHeader("Content-Type");
+        if (header != null){
+            String value = header.getValue();
+            final int i = value.indexOf(';');
+            value = i>0 ? value.substring(0, i) : value;
+
+            final int j = value.indexOf('/');
+            return "." + value.substring(j+1);
+        }
+        return "";
     }
 
     @Override
     public void put(final String url, final InputStream content) throws IOException {
         throw new IllegalStateException("Not supported exception");
+    }
+
+    private HttpGet createHttpGet(final String url) {
+        final HttpGet method = new HttpGet(url);
+        method.setHeader("Connection", "keep-alive");
+        method.setHeader("User-Agent", USER_AGENT);
+        return method;
     }
 
     private InputStream getContentAsUTF8(final CloseableHttpResponse response) throws IOException {
