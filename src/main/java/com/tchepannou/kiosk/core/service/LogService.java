@@ -59,8 +59,12 @@ public class LogService {
     }
 
     public void log(final Throwable ex) {
-        logger.info(toString(), ex);
-        values.clear();
+        if (ex == null){
+            log();
+        } else {
+            logger.info(toString(), ex);
+            values.clear();
+        }
     }
 
     private String encode(final Object value) {

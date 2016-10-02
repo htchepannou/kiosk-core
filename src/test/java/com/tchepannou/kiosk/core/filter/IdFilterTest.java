@@ -1,0 +1,23 @@
+package com.tchepannou.kiosk.core.filter;
+
+import org.apache.commons.io.IOUtils;
+import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class IdFilterTest {
+
+    @Test
+    public void testFilter() throws Exception {
+        // Given
+        final String html = IOUtils.toString(getClass().getResourceAsStream("/filter/id.html"));
+
+        // When
+        final String result = new IdFilter().filter(html);
+//        System.out.println(result);
+
+        // Then
+        final String expected = IOUtils.toString(getClass().getResourceAsStream("/filter/id_filtered.html"));
+        assertThat(expected).isNotNull();
+    }
+}
