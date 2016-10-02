@@ -6,6 +6,9 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.tika.mime.MimeType;
+import org.apache.tika.mime.MimeTypeException;
+import org.apache.tika.mime.MimeTypes;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -50,18 +53,17 @@ public class HttpService implements UrlService {
                 fileService.put(key, in);
                 return key;
             }
+        } catch (MimeTypeException e){
+            throw new IOException("Unable to resolve mime-type", e);
         }
     }
 
-    private String extension(final CloseableHttpResponse response){
+    private String extension(final CloseableHttpResponse response) throws MimeTypeException {
         final Header header = response.getFirstHeader("Content-Type");
-        if (header != null){
-            String value = header.getValue();
-            final int i = value.indexOf(';');
-            value = i>0 ? value.substring(0, i) : value;
-
-            final int j = value.indexOf('/');
-            return "." + value.substring(j+1);
+        if (header != null) {
+            final String value = header.getValue();
+            final MimeType mime = MimeTypes.getDefaultMimeTypes().forName(value);
+            return mime.getExtension();
         }
         return "";
     }

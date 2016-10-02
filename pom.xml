@@ -19,6 +19,7 @@
         <httpclient.version>4.5.1</httpclient.version>
         <javax-servlet.version>3.1.0</javax-servlet.version>
         <jsoup.version>1.8.1</jsoup.version>
+        <tika.version>1.4</tika.version>
 
         <junit.version>4.12</junit.version>
         <assertj.version>3.0.0</assertj.version>
@@ -57,6 +58,11 @@
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>${javax-servlet.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-core</artifactId>
+            <version>${tika.version}</version>
         </dependency>
 
         <!-- TEST -->
