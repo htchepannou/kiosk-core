@@ -61,7 +61,7 @@ public class RankEntryTest {
         return dim;
     }
 
-    private Rankable createRankable() {
-        return mock(Rankable.class);
+    private Object createRankable() {
+        return mock(Object.class);
     }
 }

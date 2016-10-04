@@ -2,7 +2,7 @@ package com.tchepannou.kiosk.core.ranker;
 
 import java.util.Comparator;
 
-public interface RankDimension {
+public interface RankDimension<T> {
     float getWeight();
-    Comparator<? extends Rankable> getComparator();
+    Comparator<T> getComparator();
 }

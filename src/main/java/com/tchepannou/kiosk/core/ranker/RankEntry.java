@@ -3,17 +3,17 @@ package com.tchepannou.kiosk.core.ranker;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RankEntry implements Comparable<RankEntry>{
-    private final Rankable rankable;
+public class RankEntry<T> implements Comparable<RankEntry<T>>{
+    private final T rankable;
     private final Map<RankDimension, Integer> ranks = new HashMap<>();
     private Float finalRank;
 
-    public RankEntry(final Rankable rankable) {
+    public RankEntry(final T rankable) {
         this.rankable = rankable;
     }
 
     @Override
-    public int compareTo(final RankEntry obj) {
+    public int compareTo(final RankEntry<T> obj) {
         return  (int)(100 * (getFinalRank() - obj.getFinalRank()));
     }
 
@@ -29,7 +29,7 @@ public class RankEntry implements Comparable<RankEntry>{
         return finalRank;
     }
 
-    public Rankable getRankable() {
+    public T getRankable() {
         return rankable;
     }
 
