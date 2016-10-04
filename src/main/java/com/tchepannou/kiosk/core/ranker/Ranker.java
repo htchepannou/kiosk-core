@@ -7,7 +7,13 @@ import java.util.List;
 import java.util.Map;
 
 public class Ranker<T> {
-    public List<RankEntry<T>> rank(final List<T> rankables, final List<RankDimension<T>> dimensions) {
+    private final List<RankDimension<T>> dimensions;
+
+    public Ranker(final List<RankDimension<T>> dimensions) {
+        this.dimensions = dimensions;
+    }
+
+    public List<RankEntry<T>> rank(final List<T> rankables) {
         final Map<T, RankEntry<T>> entries = new HashMap<>();
         for (final RankDimension<T> dimension : dimensions) {
             sort(rankables, entries, dimension);
