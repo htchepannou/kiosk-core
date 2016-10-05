@@ -32,6 +32,7 @@ public class Ranker<T> {
         for (final T item : items){
             final RankEntry entry = entries.containsKey(item) ? entries.get(item) : new RankEntry(item);
             entry.setRank(dimension, i++);
+            entries.put(item, entry);
         }
     }
 }
