@@ -48,6 +48,9 @@ public class SanitizeFilter implements Filter<String> {
     private Whitelist createWhitelist(final String[] tags) {
         final Whitelist wl = new Whitelist();
         wl.addTags(tags);
+        for (final String tag : tags){
+            wl.addAttributes(tag, "id");
+        }
         return wl;
     }
 
