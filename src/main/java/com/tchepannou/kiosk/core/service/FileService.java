@@ -10,11 +10,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class FileService implements UrlService {
-    private final String S3_PREFIX = "s3://";
-    private final File home;
+    protected final String S3_PREFIX = "s3://";
+    protected final String home;
 
-    public FileService(final File directory) {
-        this.home = directory;
+    protected FileService(final String home){
+        this.home = home;
+    }
+    public FileService(final File home) {
+        this(home.getAbsolutePath());
     }
 
     @Override
@@ -43,6 +46,6 @@ public class FileService implements UrlService {
     }
 
     private File toFile (final String key){
-        return new File(home.getAbsolutePath() + "/" + key);
+        return new File(home + "/" + key);
     }
 }
