@@ -51,6 +51,7 @@ public class S3ServiceTest {
         assertThat(request.getValue().getKey()).isEqualTo("foo/bar.txt");
         assertThat(request.getValue().getInputStream()).isEqualTo(in);
         assertThat(request.getValue().getMetadata().getContentEncoding()).isEqualTo("utf-8");
+        assertThat(request.getValue().getMetadata().getContentType()).isEqualTo("text/plain");
     }
 
     @Test
