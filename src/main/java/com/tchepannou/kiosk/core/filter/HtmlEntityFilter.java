@@ -1,9 +1,6 @@
 package com.tchepannou.kiosk.core.filter;
 
-/**
- * Replace all latin character to HTML entities
- */
-public class LatinFilter implements Filter<String> {
+public class HtmlEntityFilter implements Filter<String> {
     @Override
     public String filter(final String str) {
         StringBuilder out = new StringBuilder();
