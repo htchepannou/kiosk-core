@@ -14,14 +14,15 @@ import java.io.OutputStream;
 public class S3Service implements UrlService {
     private final String S3_PREFIX = "s3://";
     private final AmazonS3 s3;
+    private final String bucket;
 
-    public S3Service(final AmazonS3 s3) {
+    public S3Service(final String bucket, final AmazonS3 s3) {
+        this.bucket = bucket;
         this.s3 = s3;
     }
 
     @Override
     public void put(final String url, final InputStream content) throws IOException {
-        final String bucket = bucket(url);
         final String key = key(url);
 
         final ObjectMetadata meta = new ObjectMetadata();
@@ -33,7 +34,6 @@ public class S3Service implements UrlService {
 
     @Override
     public void get(final String url, final OutputStream out) throws IOException {
-        final String bucket = bucket(url);
         final String key = key(url);
 
         final GetObjectRequest request = new GetObjectRequest(bucket, key);
@@ -42,24 +42,9 @@ public class S3Service implements UrlService {
         }
     }
 
-    private String bucket(final String url) {
-        if (url.startsWith(S3_PREFIX)) {
-            final String xurl = url.substring(S3_PREFIX.length());
-            final int i = xurl.indexOf('/');
-            if (i > 0) {
-                return xurl.substring(0, i);
-            }
-        }
-        return null;
-    }
-
     private String key(final String url) {
         if (url.startsWith(S3_PREFIX)) {
-            final String xurl = url.substring(S3_PREFIX.length());
-            final int i = xurl.indexOf('/');
-            if (i > 0) {
-                return xurl.substring(i + 1);
-            }
+            return url.substring(S3_PREFIX.length());
         }
         return null;
     }

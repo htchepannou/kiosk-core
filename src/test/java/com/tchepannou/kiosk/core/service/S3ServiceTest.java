@@ -7,10 +7,10 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.HttpGet;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -28,8 +28,12 @@ public class S3ServiceTest {
     @Mock
     AmazonS3 s3;
 
-    @InjectMocks
     S3Service service;
+
+    @Before
+    public void setUp(){
+        service = new S3Service("bucket", s3);
+    }
 
     @Test
     public void testPut() throws Exception {
@@ -37,7 +41,7 @@ public class S3ServiceTest {
         final ByteArrayInputStream in = new ByteArrayInputStream("hello world".getBytes());
 
         // When
-        service.put("s3://bucket/foo/bar.txt", in);
+        service.put("s3://foo/bar.txt", in);
 
         // Then
         ArgumentCaptor<PutObjectRequest> request = ArgumentCaptor.forClass(PutObjectRequest.class);
@@ -61,7 +65,7 @@ public class S3ServiceTest {
         when(s3.getObject(any())).thenReturn(obj);
 
         // When
-        service.get("s3://bucket/foo/bar.txt", out);
+        service.get("s3://foo/bar.txt", out);
 
         // Then
         ArgumentCaptor<GetObjectRequest> request = ArgumentCaptor.forClass(GetObjectRequest.class);
