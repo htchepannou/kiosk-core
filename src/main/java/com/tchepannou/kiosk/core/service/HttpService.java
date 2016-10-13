@@ -9,6 +9,8 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
+import org.apache.tika.parser.txt.CharsetDetector;
+import org.apache.tika.parser.txt.CharsetMatch;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -38,7 +40,9 @@ public class HttpService implements UrlService {
         try (final CloseableHttpClient client = HttpClients.createDefault()) {
             final HttpGet method = createHttpGet(url);
             try (CloseableHttpResponse response = client.execute(method)) {
-                final InputStream in = getContentAsUTF8(response);
+                final InputStream in = isText(response)
+                        ? getContentTextAsUTF8(response)
+                        : response.getEntity().getContent();
                 IOUtils.copy(in, out);
             }
         }
@@ -48,12 +52,14 @@ public class HttpService implements UrlService {
         try (final CloseableHttpClient client = HttpClients.createDefault()) {
             final HttpGet method = createHttpGet(url);
             try (CloseableHttpResponse response = client.execute(method)) {
-                final InputStream in = getContentAsUTF8(response);
+                final InputStream in = isText(response)
+                        ? getContentTextAsUTF8(response)
+                        : response.getEntity().getContent();
                 final String key = keyPrefix + extension(response);
                 fileService.put(key, in);
                 return key;
             }
-        } catch (MimeTypeException e){
+        } catch (final MimeTypeException e) {
             throw new IOException("Unable to resolve mime-type", e);
         }
     }
@@ -80,30 +86,27 @@ public class HttpService implements UrlService {
         return method;
     }
 
-    private InputStream getContentAsUTF8(final CloseableHttpResponse response) throws IOException {
-        final InputStream in = response.getEntity().getContent();
-        final String encoding = getEncoding(response);
-        if (encoding == null || "utf-8".equalsIgnoreCase(encoding)) {
-            return in;
+    private InputStream getContentTextAsUTF8(final CloseableHttpResponse response) throws IOException {
+        final ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        IOUtils.copy(response.getEntity().getContent(), bout);
+
+        final byte[] bytes = bout.toByteArray();
+        final CharsetDetector detector = new CharsetDetector();
+        detector.setText(bytes);
+
+        final CharsetMatch charset = detector.detect();
+        if (charset == null || "utf-8".equalsIgnoreCase(charset.getName())) {
+            return new ByteArrayInputStream(bout.toByteArray());
         }
 
-        final ByteArrayOutputStream out = new ByteArrayOutputStream();
-        IOUtils.copy(in, out);
-        final String html = new String(out.toByteArray(), encoding);
-        final byte[] utf8 = html.getBytes("utf-8");
+        final String encoding = charset.getName();
+        final String html = new String(bytes, encoding);
+        final byte[] utf8 = html.getBytes("UTF-8");
         return new ByteArrayInputStream(utf8);
     }
 
-    private String getEncoding(final CloseableHttpResponse response) {
+    private boolean isText(final CloseableHttpResponse response) {
         final Header contentType = response.getFirstHeader("Content-Type");
-        if (contentType != null) {
-            final String value = contentType.getValue();
-            final String charset = "charset=";
-            final int i = value.indexOf(charset);
-            if (i > 0) {
-                return value.substring(i + charset.length());
-            }
-        }
-        return null;
+        return contentType != null && contentType.getValue().startsWith("text/");
     }
 }

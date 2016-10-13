@@ -33,13 +33,10 @@ public class ContentFilter implements Filter<String> {
         final List<Element> parts = partition(html);
         final Map<Element, Integer> histogram = histogram(parts);
         final Element top = argmax(histogram);
-        if (top != null) {
-            final Element result = merge(top, parts);
-            result.attr("id", CONTENT_ID);
-            return result.html();
-        } else {
-            return "";
-        }
+
+        final Element result = merge(top, parts);
+        result.attr("id", CONTENT_ID);
+        return result.html();
     }
 
     //-- Private
