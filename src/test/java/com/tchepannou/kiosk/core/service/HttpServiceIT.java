@@ -43,16 +43,16 @@ public class HttpServiceIT {
     @Test
     public void shouldGet() throws Exception {
         final OutputStream out = new ByteArrayOutputStream();
-        content = "hello world";
+        content = "<html><body><b>hello world!</b> This is a HTML file containing multiple data</body></html>";
         contentType = "text/plain";
 
         service.get("http://127.0.0.1:" + PORT + "/", out);
-        assertThat(out.toString()).isEqualTo("hello world");
+        assertThat(out.toString()).isEqualTo(content);
     }
 
     @Test
     public void shouldGetAndStore () throws Exception {
-        content = "<b>hello world</b>";
+        content = "<html><body><b>hello world!</b> This is a HTML file containing multiple data</body></html>";
         contentType = "text/html";
 
         final File home = Files.createTempDirectory("test").toFile();
@@ -87,7 +87,7 @@ public class HttpServiceIT {
                     System.out.println(name + "=" + request.getHeader(name));
                 }
 
-                response.getOutputStream().write(content.getBytes());
+                response.getOutputStream().write(content.getBytes("utf-8"));
                 response.setHeader("Content-Type", contentType);
                 r.setHandled(true);
             }
