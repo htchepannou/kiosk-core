@@ -16,4 +16,12 @@ public class UnaccentTokenizerTest {
 
         assertThat(new UnaccentTokenizer(tokenizer).nextToken()).isEqualTo("L’agglomeration de Paris. Marche de Noel de Strasbourg - cours de grammaire francaise");
     }
+
+    @Test
+    public void testNextTokenNull() throws Exception {
+        final Tokenizer tokenizer = mock(Tokenizer.class);
+        when(tokenizer.nextToken()).thenReturn(null);
+
+        assertThat(new UnaccentTokenizer(tokenizer).nextToken()).isNull();
+    }
 }

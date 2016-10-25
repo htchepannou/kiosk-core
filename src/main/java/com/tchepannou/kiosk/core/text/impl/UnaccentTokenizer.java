@@ -12,7 +12,8 @@ public class UnaccentTokenizer implements Tokenizer {
 
     @Override
     public String nextToken() {
-        return StringUtils.stripAccents(delegate.nextToken());
+        final String token = delegate.nextToken();
+        return token != null ? StringUtils.stripAccents(delegate.nextToken()) : null;
     }
 
 }

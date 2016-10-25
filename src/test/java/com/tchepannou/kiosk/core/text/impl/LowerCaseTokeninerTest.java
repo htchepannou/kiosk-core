@@ -16,4 +16,14 @@ public class LowerCaseTokeninerTest {
 
         assertThat(new LowerCaseTokeniner(tokenizer).nextToken()).isEqualTo("allo world");
     }
+
+
+    @Test
+    public void testNextTokenNull() throws Exception {
+        final Tokenizer tokenizer = mock(Tokenizer.class);
+        when(tokenizer.nextToken()).thenReturn(null);
+
+        assertThat(new LowerCaseTokeniner(tokenizer).nextToken()).isNull();
+    }
+
 }

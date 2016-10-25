@@ -11,6 +11,7 @@ public class LowerCaseTokeniner implements Tokenizer {
 
     @Override
     public String nextToken() {
-        return delegate.nextToken().toLowerCase();
+        final String token =  delegate.nextToken();
+        return token != null ? token.toLowerCase() : null;
     }
 }
