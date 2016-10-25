@@ -16,7 +16,7 @@
 
         <aws-java-sdk.version>1.10.67</aws-java-sdk.version>
         <commons-io.version>2.4</commons-io.version>
-        <commons-lang.version>2.6</commons-lang.version>
+        <commons-lang.version>3.4</commons-lang.version>
         <httpclient.version>4.5.1</httpclient.version>
         <javax-servlet.version>3.1.0</javax-servlet.version>
         <jsoup.version>1.8.1</jsoup.version>
@@ -46,11 +46,10 @@
             <version>${commons-io.version}</version>
         </dependency>
         <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
             <version>${commons-lang.version}</version>
-        </dependency>
-        <dependency>
+        </dependency>        <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>${httpclient.version}</version>
@@ -219,7 +218,9 @@
                         </goals>
                         <configuration>
                             <excludes>
-                                <exclude>**/*Configuration.*</exclude>
+                                <exclude>**/Among.*</exclude>
+                                <exclude>**/frenchStemmer.*</exclude>
+                                <exclude>**/Snowball*.*</exclude>
                             </excludes>
                             <dataFile>${project.build.directory}/jacoco-all.exec</dataFile>
 
