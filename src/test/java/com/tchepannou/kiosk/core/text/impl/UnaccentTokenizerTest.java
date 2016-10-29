@@ -18,6 +18,14 @@ public class UnaccentTokenizerTest {
     }
 
     @Test
+    public void testNextToken2() throws Exception {
+        final Tokenizer tokenizer = mock(Tokenizer.class);
+        when(tokenizer.nextToken()).thenReturn("je");
+
+        assertThat(new UnaccentTokenizer(tokenizer).nextToken()).isEqualTo("je");
+    }
+
+    @Test
     public void testNextTokenNull() throws Exception {
         final Tokenizer tokenizer = mock(Tokenizer.class);
         when(tokenizer.nextToken()).thenReturn(null);
