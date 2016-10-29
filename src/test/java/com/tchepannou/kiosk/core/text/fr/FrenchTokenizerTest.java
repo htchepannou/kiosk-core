@@ -24,7 +24,9 @@ public class FrenchTokenizerTest {
         assertEquals("!", tokenizer.nextToken());
         assertEquals("!", tokenizer.nextToken());
         assertEquals(" ", tokenizer.nextToken());
-        assertEquals("Jean-Paul", tokenizer.nextToken());
+        assertEquals("Jean", tokenizer.nextToken());
+        assertEquals("-", tokenizer.nextToken());
+        assertEquals("Paul", tokenizer.nextToken());
         assertEquals(" ", tokenizer.nextToken());
         assertEquals("et", tokenizer.nextToken());
         assertEquals(" ", tokenizer.nextToken());
