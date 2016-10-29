@@ -4,32 +4,31 @@ import com.tchepannou.kiosk.core.text.Tokenizer;
 
 public class FrenchTokenizer implements Tokenizer {
     private static final String DELIM = ".,?!;:'\"’-+/* \n\r\t«»“”()[]";
-    private char[] ch;
+    private final char[] ch;
     private int pos;
-    private int len;
+    private final int len;
 
-    public FrenchTokenizer (String str){
+    public FrenchTokenizer(final String str) {
         ch = str.toCharArray();
         pos = 0;
         len = str.length();
     }
 
     @Override
-    public String nextToken (){
-        int offset = pos;
+    public String nextToken() {
+        final int offset = pos;
         boolean stop = false;
-        while (pos < len && !stop){
-            char cur = ch[pos];
+        while (pos < len && !stop) {
+            final char cur = ch[pos];
 
-            if (DELIM.indexOf(cur) >= 0){
-                if (cur=='-' && (pos -1>=0 && Character.isAlphabetic(ch[pos -1])) && (pos +1< len && Character.isAlphabetic(ch[pos +1]))) { // NOSONAR (expression too complex)
-                    pos++;
-                } else if (pos >offset){ // End of word
+            if (DELIM.indexOf(cur) >= 0) {
+                if (pos > offset) { // End of word
                     stop = true;
                 } else {    // punctuation
-                    if (cur=='.' && (pos +1< len && ch[pos +1]=='.') && (pos +2< len && ch[pos +2]=='.')){ /* ... */    // NOSONAR (expression too complex)
+                    if (cur == '.' && (pos + 1 < len && ch[pos + 1] == '.') && (pos + 2 < len
+                            && ch[pos + 2] == '.')) { /* ... */    // NOSONAR (expression too complex)
                         pos += 3;
-                    }else {
+                    } else {
                         pos++;
                     }
                     stop = true;
@@ -39,10 +38,10 @@ public class FrenchTokenizer implements Tokenizer {
             }
         }
 
-        return pos > offset ? new String(ch, offset, pos -offset) : null;
+        return pos > offset ? new String(ch, offset, pos - offset) : null;
     }
 
-    public int getPosition (){
+    public int getPosition() {
         return pos;
     }
 }
