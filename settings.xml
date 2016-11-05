@@ -6,8 +6,8 @@
     <servers>
         <server>
             <id>github</id>
-            <username>GH_USERNAME</username>
-            <password>GH_PASSWOWRD</password>
+            <username>${env.GH_USERNAME}</username>
+            <password>${env.GH_PASSWORD}</password>
         </server>
     </servers>
 </settings>
